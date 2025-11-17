@@ -1,11 +1,11 @@
 package com.israelgestaoos.apitechone.service;
 
+import com.israelgestaoos.apitechone.dto.ClienteRequest;
 import com.israelgestaoos.apitechone.model.Cliente;
 import com.israelgestaoos.apitechone.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -16,16 +16,32 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<Cliente> listarTodos() {
+    public Cliente criar(ClienteRequest req) {
+        Cliente c = new Cliente();
+        c.setNome(req.getNome());
+        c.setTelefone(req.getTelefone());
+        c.setEmail(req.getEmail());
+        c.setEndereco(req.getEndereco());
+        return clienteRepository.save(c);
+    }
+
+    public List<Cliente> listar() {
         return clienteRepository.findAll();
     }
 
-    public Optional<Cliente> buscarPorId(Long id) {
-        return clienteRepository.findById(id);
+    public Cliente buscar(Long id) {
+        return clienteRepository.findById(id).orElse(null);
     }
 
-    public Cliente salvar(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public Cliente atualizar(Long id, ClienteRequest req) {
+        Cliente c = buscar(id);
+        if (c == null) return null;
+
+        c.setNome(req.getNome());
+        c.setTelefone(req.getTelefone());
+        c.setEmail(req.getEmail());
+        c.setEndereco(req.getEndereco());
+        return clienteRepository.save(c);
     }
 
     public void deletar(Long id) {

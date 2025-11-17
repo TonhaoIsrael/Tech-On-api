@@ -1,22 +1,19 @@
 package com.israelgestaoos.apitechone.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "status_os")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class StatusOs {
+@Table(name = "status_os")
+public class StatusOS {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 30)
     private String nome;
 
-    @Column(nullable = false)
+    // opcional
     private boolean finaliza;
 }

@@ -1,13 +1,16 @@
 package com.israelgestaoos.apitechone.controller;
 
+import com.israelgestaoos.apitechone.dto.CriarOSRequest;
+import com.israelgestaoos.apitechone.dto.AtualizarOSRequest;
 import com.israelgestaoos.apitechone.model.OrdemServico;
 import com.israelgestaoos.apitechone.service.OrdemServicoService;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ordens-servico")
+@RequestMapping("/api/os")
 @CrossOrigin(origins = "*")
 public class OrdemServicoController {
 
@@ -17,29 +20,29 @@ public class OrdemServicoController {
         this.ordemServicoService = ordemServicoService;
     }
 
+    @PostMapping
+    public OrdemServico criar(@RequestBody CriarOSRequest req) {
+        return ordemServicoService.criar(req);
+    }
+
     @GetMapping
     public List<OrdemServico> listar() {
-        return ordemServicoService.listarTodas();
+        return ordemServicoService.listar();
     }
 
     @GetMapping("/{id}")
-    public OrdemServico buscarPorId(@PathVariable Long id) {
-        return ordemServicoService.buscarPorId(id).orElse(null);
-    }
-
-    @PostMapping
-    public OrdemServico criar(@RequestBody OrdemServico ordem) {
-        return ordemServicoService.salvar(ordem);
+    public OrdemServico buscar(@PathVariable Long id) {
+        return ordemServicoService.buscar(id);
     }
 
     @PutMapping("/{id}")
-    public OrdemServico atualizar(@PathVariable Long id, @RequestBody OrdemServico ordem) {
-        ordem.setId(id);
-        return ordemServicoService.salvar(ordem);
+    public OrdemServico atualizar(@PathVariable Long id, @RequestBody AtualizarOSRequest req) {
+        return ordemServicoService.atualizar(id, req);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        ordemServicoService.deletar(id);
+    @PutMapping("/{id}/atribuir/{tecnicoId}")
+    public OrdemServico atribuirTecnico(@PathVariable Long id, @PathVariable Long tecnicoId) {
+        return ordemServicoService.atribuirTecnico(id, tecnicoId);
     }
+
 }

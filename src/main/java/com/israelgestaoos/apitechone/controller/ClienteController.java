@@ -1,5 +1,6 @@
 package com.israelgestaoos.apitechone.controller;
 
+import com.israelgestaoos.apitechone.dto.ClienteRequest;
 import com.israelgestaoos.apitechone.model.Cliente;
 import com.israelgestaoos.apitechone.service.ClienteService;
 import org.springframework.web.bind.annotation.*;
@@ -17,25 +18,25 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
+    @PostMapping
+    public Cliente criar(@RequestBody ClienteRequest req) {
+        return clienteService.criar(req);
+    }
+
     @GetMapping
     public List<Cliente> listar() {
-        return clienteService.listarTodos();
+        return clienteService.listar();
     }
 
     @GetMapping("/{id}")
-    public Cliente buscarPorId(@PathVariable Long id) {
-        return clienteService.buscarPorId(id).orElse(null);
-    }
-
-    @PostMapping
-    public Cliente criar(@RequestBody Cliente cliente) {
-        return clienteService.salvar(cliente);
+    public Cliente buscar(@PathVariable Long id) {
+        return clienteService.buscar(id);
     }
 
     @PutMapping("/{id}")
-    public Cliente atualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
-        cliente.setId(id);
-        return clienteService.salvar(cliente);
+    public Cliente atualizar(@PathVariable Long id,
+                             @RequestBody ClienteRequest req) {
+        return clienteService.atualizar(id, req);
     }
 
     @DeleteMapping("/{id}")

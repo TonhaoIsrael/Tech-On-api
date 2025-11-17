@@ -1,0 +1,8 @@
+package com.israelgestaoos.apitechone.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController @RequestMapping("/api")
+public class PingController {
+    @GetMapping("/ping") public String ping(){ return "ok"; }
+}

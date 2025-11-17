@@ -6,22 +6,29 @@ import lombok.*;
 @Entity
 @Table(name = "clientes")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 120)
     private String nome;
 
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     private String telefone;
 
-    @Column(length = 200)
+    @Column(unique = true, length = 120)
+    private String email;
+
+    @Column(length = 255)
     private String endereco;
 
-    private String observacoes;
+    @Column(nullable = false)
+    private boolean ativo = true;
+
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private java.time.LocalDateTime criadoEm = java.time.LocalDateTime.now();
 }

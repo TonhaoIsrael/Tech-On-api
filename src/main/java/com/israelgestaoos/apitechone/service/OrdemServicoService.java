@@ -1,34 +1,89 @@
 package com.israelgestaoos.apitechone.service;
 
+import com.israelgestaoos.apitechone.dto.CriarOSRequest;
+import com.israelgestaoos.apitechone.dto.AtualizarOSRequest;
 import com.israelgestaoos.apitechone.model.OrdemServico;
+import com.israelgestaoos.apitechone.model.Usuario;
 import com.israelgestaoos.apitechone.repository.OrdemServicoRepository;
+import com.israelgestaoos.apitechone.repository.ClienteRepository;
+import com.israelgestaoos.apitechone.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrdemServicoService {
 
-    private final OrdemServicoRepository ordemServicoRepository;
+    private final OrdemServicoRepository osRepository;
+    private final ClienteRepository clienteRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository) {
-        this.ordemServicoRepository = ordemServicoRepository;
+    public OrdemServicoService(
+            OrdemServicoRepository osRepository,
+            ClienteRepository clienteRepository,
+            UsuarioRepository usuarioRepository
+    ) {
+        this.osRepository = osRepository;
+        this.clienteRepository = clienteRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    public List<OrdemServico> listarTodas() {
-        return ordemServicoRepository.findAll();
+    // =============================== CRIAR OS ===============================
+    public OrdemServico criar(CriarOSRequest req) {
+
+        OrdemServico os = new OrdemServico();
+
+        // >>> FALTAVA ISSO <<<
+        os.setTitulo(req.getTitulo());
+
+        os.setDescricao(req.getDescricao());
+        os.setCliente(clienteRepository.findById(req.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
+
+        os.setTecnico(usuarioRepository.findById(req.getTecnicoId())
+                .orElseThrow(() -> new RuntimeException("Técnico não encontrado")));
+
+        // ENUMS vindo do JSON
+        os.setPrioridade(req.getPrioridade());
+        os.setStatus(req.getStatus());
+
+        // Agendamento opcional
+        os.setDataAgendada(req.getDataAgendada());
+        os.setAgendada(req.getDataAgendada() != null);
+
+        return osRepository.save(os);
     }
 
-    public Optional<OrdemServico> buscarPorId(Long id) {
-        return ordemServicoRepository.findById(id);
+    // =============================== LISTAR ===============================
+    public List<OrdemServico> listar() {
+        return osRepository.findAll();
     }
 
-    public OrdemServico salvar(OrdemServico ordemServico) {
-        return ordemServicoRepository.save(ordemServico);
+    // =============================== BUSCAR ===============================
+    public OrdemServico buscar(Long id) {
+        return osRepository.findById(id).orElse(null);
     }
 
-    public void deletar(Long id) {
-        ordemServicoRepository.deleteById(id);
+    // =============================== ATUALIZAR ===============================
+    public OrdemServico atualizar(Long id, AtualizarOSRequest req) {
+        OrdemServico os = buscar(id);
+        if (os == null) return null;
+
+        os.setDescricao(req.getDescricao());
+        os.setStatus(req.getStatus());
+        os.setPrioridade(req.getPrioridade());
+
+        return osRepository.save(os);
+    }
+
+    // =============================== ATRIBUIR TÉCNICO ===============================
+    public OrdemServico atribuirTecnico(Long osId, Long tecnicoId) {
+
+        OrdemServico os = buscar(osId);
+
+        Usuario tecnico = usuarioRepository.findById(tecnicoId)
+                .orElseThrow(() -> new RuntimeException("Técnico não encontrado"));
+
+        os.setTecnico(tecnico);
+        return osRepository.save(os);
     }
 }
