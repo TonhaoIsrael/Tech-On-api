@@ -1,4 +1,4 @@
-# ApiTechOne – Gestão de Ordem de Serviço em Campo
+# ApiTechOn – Gestão de Ordem de Serviço em Campo
 
 API REST desenvolvida em **Java 17** com **Spring Boot 3**, voltada para o **gerenciamento de Ordens de Serviço (OS) em campo**, controle de clientes e usuários (técnicos e administradores), com autenticação via **JWT** e regras de permissão por **role** (ADMIN / TECNICO).
 
