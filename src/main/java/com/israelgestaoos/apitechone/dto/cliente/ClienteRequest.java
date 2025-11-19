@@ -1,4 +1,4 @@
-package com.israelgestaoos.apitechone.dto;
+package com.israelgestaoos.apitechone.dto.cliente;
 
 import lombok.Data;
 

@@ -1,6 +1,9 @@
-package com.israelgestaoos.apitechone.dto;
+package com.israelgestaoos.apitechone.dto.os;
 
+import com.israelgestaoos.apitechone.model.enums.Prioridade;
+import com.israelgestaoos.apitechone.model.enums.StatusOS;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -11,9 +14,9 @@ public class OrdemServicoRequest {
 
     private Long clienteId;
     private Long tecnicoId;
-    private Long prioridadeId;
-    private Long statusId;
 
-    // NOVO — agendamento opcional
+    private Prioridade prioridade;
+    private StatusOS status;
+
     private LocalDateTime dataAgendada;
 }

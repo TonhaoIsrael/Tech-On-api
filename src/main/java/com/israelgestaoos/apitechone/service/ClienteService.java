@@ -1,6 +1,6 @@
 package com.israelgestaoos.apitechone.service;
 
-import com.israelgestaoos.apitechone.dto.ClienteRequest;
+import com.israelgestaoos.apitechone.dto.cliente.ClienteRequest;
 import com.israelgestaoos.apitechone.model.Cliente;
 import com.israelgestaoos.apitechone.repository.ClienteRepository;
 import org.springframework.stereotype.Service;

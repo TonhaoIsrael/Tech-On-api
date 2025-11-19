@@ -1,6 +1,8 @@
 package com.israelgestaoos.apitechone.controller;
 
-import com.israelgestaoos.apitechone.dto.ClienteRequest;
+import com.israelgestaoos.apitechone.dto.cliente.ClienteRequest;
+import com.israelgestaoos.apitechone.dto.cliente.ClienteResponse;
+import com.israelgestaoos.apitechone.dto.DtoMapper;
 import com.israelgestaoos.apitechone.model.Cliente;
 import com.israelgestaoos.apitechone.service.ClienteService;
 import org.springframework.web.bind.annotation.*;
@@ -13,30 +15,37 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final DtoMapper mapper;
 
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, DtoMapper mapper) {
         this.clienteService = clienteService;
+        this.mapper = mapper;
     }
 
     @PostMapping
-    public Cliente criar(@RequestBody ClienteRequest req) {
-        return clienteService.criar(req);
+    public ClienteResponse criar(@RequestBody ClienteRequest req) {
+        Cliente c = clienteService.criar(req);
+        return mapper.toClienteResponse(c);
     }
 
     @GetMapping
-    public List<Cliente> listar() {
-        return clienteService.listar();
+    public List<ClienteResponse> listar() {
+        return clienteService.listar().stream()
+                .map(mapper::toClienteResponse)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Cliente buscar(@PathVariable Long id) {
-        return clienteService.buscar(id);
+    public ClienteResponse buscar(@PathVariable Long id) {
+        Cliente c = clienteService.buscar(id);
+        return mapper.toClienteResponse(c);
     }
 
     @PutMapping("/{id}")
-    public Cliente atualizar(@PathVariable Long id,
-                             @RequestBody ClienteRequest req) {
-        return clienteService.atualizar(id, req);
+    public ClienteResponse atualizar(@PathVariable Long id,
+                                     @RequestBody ClienteRequest req) {
+        Cliente c = clienteService.atualizar(id, req);
+        return mapper.toClienteResponse(c);
     }
 
     @DeleteMapping("/{id}")

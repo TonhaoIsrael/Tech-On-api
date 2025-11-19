@@ -1,11 +1,13 @@
 package com.israelgestaoos.apitechone.controller;
 
-import com.israelgestaoos.apitechone.dto.CriarOSRequest;
-import com.israelgestaoos.apitechone.dto.AtualizarOSRequest;
+import com.israelgestaoos.apitechone.dto.DtoMapper;
+import com.israelgestaoos.apitechone.dto.os.AtualizarOSRequest;
+import com.israelgestaoos.apitechone.dto.os.CriarOSRequest;
+import com.israelgestaoos.apitechone.dto.os.OrdemServicoResponse;
 import com.israelgestaoos.apitechone.model.OrdemServico;
 import com.israelgestaoos.apitechone.service.OrdemServicoService;
-
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -15,34 +17,61 @@ import java.util.List;
 public class OrdemServicoController {
 
     private final OrdemServicoService ordemServicoService;
+    private final DtoMapper mapper;
 
-    public OrdemServicoController(OrdemServicoService ordemServicoService) {
+    public OrdemServicoController(OrdemServicoService ordemServicoService, DtoMapper mapper) {
         this.ordemServicoService = ordemServicoService;
+        this.mapper = mapper;
     }
 
+    // ====================== CRIAR OS (ADMIN) ======================
     @PostMapping
-    public OrdemServico criar(@RequestBody CriarOSRequest req) {
-        return ordemServicoService.criar(req);
+    public OrdemServicoResponse criar(@RequestBody CriarOSRequest req) {
+        OrdemServico os = ordemServicoService.criar(req);
+        return mapper.toOrdemServicoResponse(os);
     }
 
+    // ====================== LISTAR (ADMIN = tudo, TÉCNICO = só dele) ======================
     @GetMapping
-    public List<OrdemServico> listar() {
-        return ordemServicoService.listar();
+    public List<OrdemServicoResponse> listar() {
+        return ordemServicoService.listar().stream()
+                .map(mapper::toOrdemServicoResponse)
+                .toList();
     }
 
+    // ====================== BUSCAR POR ID ======================
     @GetMapping("/{id}")
-    public OrdemServico buscar(@PathVariable Long id) {
-        return ordemServicoService.buscar(id);
+    public OrdemServicoResponse buscar(@PathVariable Long id) {
+        OrdemServico os = ordemServicoService.buscar(id);
+        return mapper.toOrdemServicoResponse(os);
     }
 
+    // ====================== ATUALIZAR ======================
     @PutMapping("/{id}")
-    public OrdemServico atualizar(@PathVariable Long id, @RequestBody AtualizarOSRequest req) {
-        return ordemServicoService.atualizar(id, req);
+    public OrdemServicoResponse atualizar(@PathVariable Long id,
+                                          @RequestBody AtualizarOSRequest req) {
+        OrdemServico os = ordemServicoService.atualizar(id, req);
+        return mapper.toOrdemServicoResponse(os);
     }
 
+    // ====================== ATRIBUIR TÉCNICO (ADMIN) ======================
     @PutMapping("/{id}/atribuir/{tecnicoId}")
-    public OrdemServico atribuirTecnico(@PathVariable Long id, @PathVariable Long tecnicoId) {
-        return ordemServicoService.atribuirTecnico(id, tecnicoId);
+    public OrdemServicoResponse atribuirTecnico(@PathVariable Long id,
+                                                @PathVariable Long tecnicoId) {
+        OrdemServico os = ordemServicoService.atribuirTecnico(id, tecnicoId);
+        return mapper.toOrdemServicoResponse(os);
+    }
+
+
+
+
+    // ====================== LISTAR OS DO DIA ATUAL ======================
+    @GetMapping("/hoje")
+    public List<OrdemServicoResponse> listarHoje() {
+        LocalDate hoje = LocalDate.now();
+        return ordemServicoService.listarDoDia(hoje).stream()
+                .map(mapper::toOrdemServicoResponse)
+                .toList();
     }
 
 }
