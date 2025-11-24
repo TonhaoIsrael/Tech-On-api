@@ -1,90 +1,200 @@
-# ApiTechOn – Gestão de Ordem de Serviço em Campo
+📘 ApiTechOne – Sistema de Gestão de Ordens de Serviço 
 
-API REST desenvolvida em **Java 17** com **Spring Boot 3**, voltada para o **gerenciamento de Ordens de Serviço (OS) em campo**, controle de clientes e usuários (técnicos e administradores), com autenticação via **JWT** e regras de permissão por **role** (ADMIN / TECNICO).
+A ApiTechOne é uma API REST desenvolvida em Java Spring Boot 3, projetada para gerenciar clientes, usuários, equipes técnicas e ordens de serviço (OS) de maneira moderna, segura e escalável. ela também fornece autenticação JWT, controle de permissões e integrações práticas para uso com um aplicativo móvel ou web.
 
----
+🚀 Tecnologias Utilizadas
 
-## Tecnologias
+Java 17
 
-- Java 17  
-- Spring Boot 3 (Web, Data JPA, Security, Validation)  
-- PostgreSQL  
-- JPA / Hibernate  
-- JWT (jjwt)  
-- Lombok  
+Spring Boot 3
 
----
+Spring Security + JWT
 
-## Principais funcionalidades
+Spring Data JPA / Hibernate
 
-- Autenticação e login com **JWT**
-  - Login via `/api/auth/login`
-  - Senhas criptografadas com BCrypt
-- Gestão de usuários:
-  - ADMIN e TECNICO (via entidade `Role`)
-  - CRUD de usuários
-- Gestão de clientes:
-  - CRUD de clientes
-- Gestão de Ordem de Serviço:
-  - Criação de OS (ADMIN)
-  - Atribuição de técnico
-  - Atualização de status, prioridade e descrição
-  - Regras de acesso:
-    - ADMIN vê e altera todas as OS
-    - TECNICO só vê e altera as OS atribuídas a ele
-- Filtro de OS do dia:
-  - Endpoint `/api/os/hoje`
-  - Retorna somente as OS do **dia atual**
-  - Ordenação por:
-    1. Status (ABERTO → EM_ANDAMENTO → CONCLUIDO → CANCELADO)
-    2. Horário (`dataAgendada`)
+PostgreSQL (Neon Database)
 
----
+Maven
 
-## Modelagem (resumo)
+Render (Deploy via Docker)
 
-### Entidades principais
+🌐 URLs da API
 
-- `Cliente`
-- `Usuario`
-- `Role`
-- `OrdemServico`
+Local: http://localhost:8080
 
-### Enums
+Produção (Render): https://tech-on-api.onrender.com
 
-- `StatusOS`
-  - `ABERTO`, `EM_ANDAMENTO`, `CONCLUIDO`, `CANCELADO`
-- `Prioridade`
-  - `BAIXA`, `MEDIA`, `ALTA`, `URGENTE`
+🔐 Autenticação (JWT)
 
----
+A autenticação é feita via:
 
-## Requisitos
+POST /api/auth/login
+Body:
+{
+  "email": "admin@gmail.com",
+  "senha": "1234"
+}
 
-- JDK 17+
-- Maven 3+
-- PostgreSQL
+Resposta:
+{
+  "nome": "Administrador",
+  "email": "admin@gmail.com",
+  "role": "ADMIN",
+  "token": "Bearer xxxxx..."
+}
 
----
 
-## Configuração
+Para acessar rotas protegidas:
 
-As configurações de banco e servidor estão em:
+Authorization: Bearer <TOKEN>
 
-`src/main/resources/application.properties`
+👥 Perfis de Usuário (Roles)
+Role	Permissões
+ADMIN	Criar/editar usuários, clientes e OS. Ver TODAS as OS. Atribuir técnico.
+TECNICO	Ver apenas suas próprias OS. Alterar status, prioridade e descrição.
+🧩 Entidades Principais
+1. Clientes
 
-Exemplo (ajuste conforme seu ambiente):
+nome
 
-```properties
-spring.application.name=ApiTechOne
+telefone
 
-server.port=8080
+email
 
-spring.datasource.url=jdbc:postgresql://<HOST>:<PORT>/<DATABASE>?sslmode=require
-spring.datasource.username=<USUARIO>
-spring.datasource.password=<SENHA>
+endereço
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+ativo
+
+2. Usuários
+
+nome
+
+email
+
+senha (criptografada)
+
+role (ADMIN/TECNICO)
+
+3. Ordem de Serviço
+
+título
+
+descrição
+
+cliente
+
+técnico
+
+prioridade (ENUM)
+
+status (ENUM)
+
+dataAgendada
+
+agendada
+
+🧭 Endpoints da API
+📌 Clientes
+Método	Rota	Descrição
+POST	/api/clientes	Criar cliente
+GET	/api/clientes	Listar todos
+GET	/api/clientes/{id}	Buscar por ID
+PUT	/api/clientes/{id}	Atualizar
+DELETE	/api/clientes/{id}	Remover
+📌 Usuários
+Método	Rota	Descrição
+POST	/api/usuarios	Criar usuário
+GET	/api/usuarios	Listar usuários
+GET	/api/usuarios/{id}	Buscar por ID
+PUT	/api/usuarios/{id}	Atualizar
+DELETE	/api/usuarios/{id}	Remover
+📌 Ordens de Serviço (OS)
+Método	Rota	Descrição
+POST	/api/os	Criar OS (ADMIN)
+GET	/api/os	Listar (ADMIN → todas, TECNICO → apenas as suas)
+GET	/api/os/{id}	Buscar OS
+PUT	/api/os/{id}	Atualizar OS
+PUT	/api/os/{id}/atribuir/{tecnicoId}	Atribuir técnico
+GET	/api/os/hoje	OS agendadas para o dia atual
+🗂️ Filtro Especial: OS do Dia (Home do Técnico)
+GET /api/os/hoje
+
+
+Regras:
+
+ADMIN → vê todas
+
+TECNICO → vê apenas as suas
+
+Ordenação automática:
+
+OS em aberto primeiro
+
+depois OS concluídas
+
+dentro de cada grupo → ordena por horário
+
+🤖 Automação de Testes
+
+Este projeto possui um script Node.js que:
+
+Faz login automaticamente
+
+Cria clientes em lote
+
+Cria ordens de serviço
+
+Prepara ambiente de demonstração rapidamente
+
+🐳 Deploy (Render + Docker)
+
+A aplicação é empacotada em um container com:
+
+Java Temurin 17
+
+Build com Maven
+
+Execução automática do .jar gerado em /target
+
+📦 Como Rodar Localmente
+1. Clonar repositório:
+git clone https://github.com/TonhaoIsrael/Tech-On-api
+
+2. Rodar:
+./mvnw spring-boot:run
+
+📄 Scripts Úteis
+Criar build:
+./mvnw clean package -DskipTests
+
+Rodar JAR:
+java -jar target/ApiTechOne-0.0.1-SNAPSHOT.jar
+
+🧱 Arquitetura do Sistema
+Front-End 
+        ↓
+     ApiTechOne (Spring Boot)
+        ↓
+PostgreSQL Database (Neon)
+
+🎓 Sobre o Projeto 
+
+Este sistema foi desenvolvido para demonstrar:
+
+uso de autenticação JWT
+
+controle de permissões (RBAC)
+
+CRUD completo
+
+integração real com banco em nuvem
+
+deploy profissional
+
+organização modular de serviços, controllers e entidades
+
+automação de testes via script externo
+
+📜 Licença
+
+Projeto acadêmico. Uso livre para demonstração e fins educativos.
