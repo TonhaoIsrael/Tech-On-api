@@ -31,10 +31,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/auth/**",
+                        "/api/auth/login",
                         "/api/ping",
                         "/api/echo"
-                ).permitAll()
+                        ).permitAll()
 
                 .anyRequest().authenticated()
         );
