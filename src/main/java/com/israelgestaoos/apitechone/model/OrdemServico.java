@@ -20,12 +20,12 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // RELACIONAMENTO COM CLIENTE (obrigatório)
+    // RELACIONAMENTO COM CLIENT
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    // RELACIONAMENTO COM TÉCNICO (opcional)
+    // RELACIONAMENTO COM TÉCNICO
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
     private Usuario tecnico;
@@ -46,11 +46,11 @@ public class OrdemServico {
     @Column(nullable = false)
     private StatusOS status = StatusOS.ABERTO;
 
-    // DATA DE CRIAÇÃO (não atualiza)
+    // DATA DE CRIAÇÃO
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
-    // DATA AGENDADA (opcional)
+    // DATA AGENDADA
     @Column(name = "data_agendada")
     private LocalDateTime dataAgendada;
 
