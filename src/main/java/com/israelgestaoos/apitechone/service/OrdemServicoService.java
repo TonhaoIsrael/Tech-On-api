@@ -123,6 +123,7 @@ public class OrdemServicoService {
         }
 
         // ADMIN: pode alterar tudo (aqui estamos mantendo só os mesmos campos)
+        if(req.getTitulo() != null) os.setTitulo(req.getTitulo());
         if (req.getDescricao() != null) os.setDescricao(req.getDescricao());
         if (req.getPrioridade() != null) os.setPrioridade(req.getPrioridade());
         if (req.getStatus() != null) os.setStatus(req.getStatus());
