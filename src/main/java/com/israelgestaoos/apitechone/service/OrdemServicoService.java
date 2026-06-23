@@ -173,6 +173,8 @@ public class OrdemServicoService {
             case EM_ANDAMENTO -> 1;
             case CONCLUIDO -> 2;
             case CANCELADO -> 3;
+            case REMARCADA->4;
+
         };
     }
 }

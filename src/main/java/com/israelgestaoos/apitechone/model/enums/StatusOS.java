@@ -4,5 +4,7 @@ public enum StatusOS {
     ABERTO,
     EM_ANDAMENTO,
     CONCLUIDO,
-    CANCELADO
+    CANCELADO,
+    REMARCADA
+
 }
