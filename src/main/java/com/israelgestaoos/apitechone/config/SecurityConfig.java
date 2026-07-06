@@ -59,10 +59,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // origens permitidas — adicione aqui o domínio do seu front em produção
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200",
-                "http://localhost:3000"
-        ));
+        config.setAllowedOriginPatterns(List.of("*"));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
