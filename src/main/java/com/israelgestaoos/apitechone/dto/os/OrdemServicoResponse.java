@@ -16,7 +16,7 @@ public class OrdemServicoResponse {
 
     private Long clienteId;
     private String clienteNome;
-
+    private String clienteEndereco;
     private Long tecnicoId;
     private String tecnicoNome;
 

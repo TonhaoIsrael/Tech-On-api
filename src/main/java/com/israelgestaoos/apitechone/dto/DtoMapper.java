@@ -45,35 +45,35 @@ public class DtoMapper {
     // ============================
     // ORDEM SERVICO → OS RESPONSE
     // ============================
-    public OrdemServicoResponse toOrdemServicoResponse(OrdemServico os) {
-        if (os == null) return null;
+public OrdemServicoResponse toOrdemServicoResponse(OrdemServico os) {
+    if (os == null) return null;
 
-        OrdemServicoResponse dto = new OrdemServicoResponse();
+    OrdemServicoResponse dto = new OrdemServicoResponse();
 
-        dto.setId(os.getId());
-        dto.setTitulo(os.getTitulo());
-        dto.setDescricao(os.getDescricao());
+    dto.setId(os.getId());
+    dto.setTitulo(os.getTitulo());
+    dto.setDescricao(os.getDescricao());
 
-        // Cliente
-        if (os.getCliente() != null) {
-            dto.setClienteId(os.getCliente().getId());
-            dto.setClienteNome(os.getCliente().getNome());
-        }
-
-        // Técnico
-        if (os.getTecnico() != null) {
-            dto.setTecnicoId(os.getTecnico().getId());
-            dto.setTecnicoNome(os.getTecnico().getNome());
-        }
-
-        dto.setPrioridade(os.getPrioridade());
-        dto.setStatus(os.getStatus());
-
-        dto.setCriadoEm(os.getCriadoEm());
-        dto.setDataAgendada(os.getDataAgendada());
-        dto.setAgendada(os.isAgendada());
-
-        return dto;
+    // Cliente
+    if (os.getCliente() != null) {
+        dto.setClienteId(os.getCliente().getId());
+        dto.setClienteNome(os.getCliente().getNome());
+        dto.setClienteEndereco(os.getCliente().getEndereco()); // <-- NOVO
     }
 
+    // Técnico
+    if (os.getTecnico() != null) {
+        dto.setTecnicoId(os.getTecnico().getId());
+        dto.setTecnicoNome(os.getTecnico().getNome());
+    }
+
+    dto.setPrioridade(os.getPrioridade());
+    dto.setStatus(os.getStatus());
+
+    dto.setCriadoEm(os.getCriadoEm());
+    dto.setDataAgendada(os.getDataAgendada());
+    dto.setAgendada(os.isAgendada());
+
+    return dto;
+}
 }
